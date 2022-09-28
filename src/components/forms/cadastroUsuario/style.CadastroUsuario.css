@@ -1,0 +1,14 @@
+.container{
+    padding: 10px;
+    width: 250px;
+    height: 100px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    background-color: #efefef;
+    text-align: center;
+    color: black;
+}
