@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import data from "./data"
+import dataTitulacao from "./dataTitulacao"
+import dataEstado from "./dataEstado";
+
 
 
 import "./style.CadastroUsuario.css";
 
 const Formulario = () => {
-    const titul = data
   // Estados e Municipios
   /*===============================================================================*/
 
-  const [ufs, setUfs] = useState([]); //Estados
+  /*const [ufs, setUfs] = useState([]); //Estados*/
   const [municipio, setMunicipio] = useState([]); //Municipios
   const [ufSelecionada, setUfSelecionada] = useState("0");
 
-  //baixando dados dos Estados com a API do IBGE
+  /*//baixando dados dos Estados com a API do IBGE
   useEffect(() => {
     axios
       .get("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
       .then((res) => {
         setUfs(res.data);
       });
-  }, []);
+  }, []);*/
 
   //baixando dados dos Municipios com a API do IBGE
   useEffect(() => {
@@ -171,7 +172,7 @@ const Formulario = () => {
   // Tratamento do formulário
   /*===============================================================================*/
 
-  const [formvalue, setFormValue] = useState({});
+  const [formValue, setFormValue] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -182,15 +183,15 @@ const Formulario = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValue({ ...formvalue, [name]: value });
+    setFormValue({ ...formValue, [name]: value });
   };
   /*===============================================================================*/
 
   // Verificador de senha
   /*===============================================================================*/
   const verificadorForm = () => {
-    if (formvalue.senha && formvalue.senhaVeri) {
-      if (formvalue.senha !== formvalue.senhaVeri) {
+    if (formValue.senha && formValue.senhaVeri) {
+      if (formValue.senha !== formValue.senhaVeri) {
         alert("As senhas devem ser iguais!");
       }
     }
@@ -206,7 +207,7 @@ const Formulario = () => {
           name="nome"
           placeholder="Digite seu nome:"
           onChange={handleInputChange}
-          value={formvalue.nome || ""}
+          value={formValue.nome || ""}
         />
         <input
           type="text"
@@ -223,6 +224,7 @@ const Formulario = () => {
           onBlur={(e) => {
             validarCPF(e.target);
           }}
+          value={formValue.cpf || ""}
         />
         <input
           type="text"
@@ -235,48 +237,49 @@ const Formulario = () => {
               .replace(/(\..*?)\..*/g, "$1");
           }}
           onChange={handleInputChange}
-          onBlur={formatData}
-          value={formvalue.dt_Nascimento || ""}
+          onChangeCapture={formatData}
+          value={formValue.dt_Nascimento || ""}
         />
         <input
           type="url"
           name="lattes"
           placeholder="Formato: http://lattes.cnpq.br/<seu identificador>"
           onChange={handleInputChange}
-          value={formvalue.lattes || ""}
+          value={formValue.lattes || ""}
         />
         <input
           type="text"
           name="instituicao"
           placeholder="Instituição onde está matriculado:"
           onChange={handleInputChange}
-          value={formvalue.instituicao || ""}
+          value={formValue.instituicao || ""}
         />
 
         <select
           name="titulacao"
           onChange={handleInputChange}
-          value={formvalue.titulacao || ""}
+          value={formValue.titulacao || ""}
         >
           <option value="0 ">Selecione a sua titulação </option>
-          {titul.map((e) => (
+          {dataTitulacao.map((e) => (
             <option value={e.value}>{e.intext}</option>
           ))}
            
         </select>
 
-        <select name="estado" onChange={handleSelecaoUf}>
+        <select name="estado" onChange={handleSelecaoUf} onChangeCapture={handleInputChange} value={formValue.estado || ""}>
           <option value="0">Selecione seu Estado</option>
-          {ufs.map((uf) => (
-            <option key={uf.id} value={uf.sigla}>
+          {dataEstado.sort().map((uf) => (
+            <option value={uf.sigla}>
               {uf.nome}
             </option>
           ))}
         </select>
-        <select name="cidade">
+
+        <select name="cidade" onChange={handleInputChange} value={formValue.cidade || ""}>
           <option value="0">Selecione seu Municipio</option>
           {municipio.map((mun) => (
-            <option key={mun.id} value={mun.nome}>
+            <option value={mun.nome}>
               {mun.nome}
             </option>
           ))}
@@ -287,14 +290,14 @@ const Formulario = () => {
           name="endereco"
           placeholder="Digite seu endereço:"
           onChange={handleInputChange}
-          value={formvalue.endereco || ""}
+          value={formValue.endereco || ""}
         />
         <input
           type="text"
           name="bairro"
           placeholder="Digite o bairro:"
           onChange={handleInputChange}
-          value={formvalue.bairro || ""}
+          value={formValue.bairro || ""}
         />
         <input
           type="text"
@@ -306,7 +309,9 @@ const Formulario = () => {
               .replace(/[^0-9.]/g, "")
               .replace(/(\..*?)\..*/g, "$1");
           }}
-          onChange={formatCep}
+          onChange={handleInputChange}
+          onChangeCapture={formatCep}
+          value={formValue.cep || ""}
         />
 
         <input
@@ -314,17 +319,17 @@ const Formulario = () => {
           name="usuario"
           placeholder="Digite seu usuário:"
           onChange={handleInputChange}
-          value={formvalue.usuario || ""}
+          value={formValue.usuario || ""}
         />
         <input
           type="email"
           name="email"
           placeholder="Digite seu email:"
           onChange={handleInputChange}
-          value={formvalue.email || ""}
+          value={formValue.email || ""}
         />
         <input
-          type="tel"
+          type="text"
           name="telefone"
           placeholder="Digite seu telefone:"
           onInput={(e) => {
@@ -332,15 +337,17 @@ const Formulario = () => {
               .replace(/[^0-9.]/g, "")
               .replace(/(\..*?)\..*/g, "$1");
           }}
-          onChange={formatTel}
+          onChange={handleInputChange}
+          onChangeCapture={formatTel}
+          value={formValue.telefone || ""}
         />
         <input
           type="password"
           name="senha"
           placeholder="Digite uma senha:"
           onChange={handleInputChange}
-          value={formvalue.senha || ""}
-          onBlur={formvalue.senhaVeri === "" || verificadorForm}
+          onBlur={formValue.senhaVeri === "" || verificadorForm}
+          value={formValue.senha || ""}
         />
         <input
           type="password"
@@ -348,7 +355,7 @@ const Formulario = () => {
           placeholder="Digite a mesma senha:"
           onChange={handleInputChange}
           onBlur={verificadorForm}
-          value={formvalue.senhaVeri || ""}
+          value={formValue.senhaVeri || ""}
         />
         <button type="submit">Cadastra</button>
       </form>

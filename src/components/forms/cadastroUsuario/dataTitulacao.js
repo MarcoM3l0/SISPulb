@@ -1,4 +1,4 @@
-const data = [
+const dataTitulacao = [
     {
         value: "ensino-fundamental-incompleto",
         intext: "Ensino Fundamental incompleto"
@@ -70,4 +70,4 @@ const data = [
     }
 ]
 
-export default data;
+export default dataTitulacao;
